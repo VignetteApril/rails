@@ -630,11 +630,12 @@
       this.file = blob.file;
       var _blob$directUploadDat = blob.directUploadData, url = _blob$directUploadDat.url, headers = _blob$directUploadDat.headers;
       this.xhr = new XMLHttpRequest();
-      this.xhr.open("PUT", url, true);
+      this.xhr.open("POST", url, true);
       this.xhr.responseType = "text";
-      for (var key in headers) {
-        this.xhr.setRequestHeader(key, headers[key]);
-      }
+      this.formData = new formData()
+      this.formData.append("file", this.file);
+      this.formData.append("token", headers["x-token"]);
+      this.formData.append("key", blob.attributes.key);
       this.xhr.addEventListener("load", function(event) {
         return _this.requestDidLoad(event);
       });
@@ -646,7 +647,7 @@
       key: "create",
       value: function create(callback) {
         this.callback = callback;
-        this.xhr.send(this.file.slice());
+        this.xhr.send(this.formData);
       }
     }, {
       key: "requestDidLoad",
